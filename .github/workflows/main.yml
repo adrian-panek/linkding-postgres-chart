@@ -72,6 +72,16 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v3
 
+      - name: Generate index.yaml
+        run: |
+          mkdir -p pages
+          if [ -f "index.yaml" ]; then
+            cp index.yaml pages/
+          fi
+          helm repo index --url https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }} --merge pages/index.yaml packages/
+          cp packages/*.tgz pages/
+          cp packages/index.yaml pages/
+
       - name: Add index.html
         run: |
           cat <<EOF > pages/index.html
@@ -87,16 +97,6 @@ jobs:
           </html>
           EOF
 
-
-      - name: Generate index.yaml
-        run: |
-          mkdir -p pages
-          if [ -f "index.yaml" ]; then
-            cp index.yaml pages/
-          fi
-          helm repo index --url https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }} --merge pages/index.yaml packages/
-          cp packages/*.tgz pages/
-          cp packages/index.yaml pages/
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
