@@ -72,6 +72,22 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v3
 
+      - name: Add index.html
+        run: |
+          cat <<EOF > pages/index.html
+          <!DOCTYPE html>
+          <html>
+          <body>
+            <h1>Linkding Helm Chart repostitory</h1>
+            <p>To use this repo run the following command:</p>
+            <pre>
+            helm repo add linkding https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
+            </pre>
+          </body>
+          </html>
+          EOF
+
+
       - name: Generate index.yaml
         run: |
           mkdir -p pages
