@@ -1,0 +1,25 @@
+apiVersion: v1
+entries:
+  linkding:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2025-12-16T20:07:27.869539958Z"
+    description: A Helm chart for Kubernetes
+    digest: 64fcf92caeb2f0f0436c7182e9c1e677d00088d06dc528f35e1bb129d4488e27
+    name: linkding
+    type: application
+    urls:
+    - https://github.com/adrian-panek/linkding-postgres-chart/releases/download/linkding-0.1.0/linkding-0.1.0.tgz
+    version: 0.1.0
+  postgres:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2025-12-16T20:07:28.083259125Z"
+    description: A Helm chart for Kubernetes
+    digest: 0634d5016026fd5be9cac6febacadb13df3a939b1790a26e6d4ed24fb89bf51d
+    name: postgres
+    type: application
+    urls:
+    - https://github.com/adrian-panek/linkding-postgres-chart/releases/download/postgres-0.1.0/postgres-0.1.0.tgz
+    version: 0.1.0
+generated: "2025-12-16T20:07:28.083264455Z"
