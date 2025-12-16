@@ -1,0 +1,72 @@
+name: Dependency Update
+
+on:
+  schedule:
+    - cron: '0 2 * * 1'  # Every Monday at 2 AM UTC
+  workflow_dispatch:
+
+jobs:
+  update-dependencies:
+    name: Update Chart Dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: "3.14.0"
+
+      - name: Update dependencies
+        run: |
+          for chart in charts/*/; do
+            if [ -f "$chart/Chart.yaml" ]; then
+              chart_name=$(basename "$chart")
+              echo "Checking for updates to chart: $chart_name"
+              cd "$chart"
+              
+              # Update dependencies if any
+              if [ -f "requirements.yaml" ] || [ -f "Chart.lock" ]; then
+                helm dependency update
+              fi
+              
+              # Check for image updates (basic check for latest tag)
+              current_image=$(grep -E "^\s*tag:" values.yaml | awk '{print $2}' | sed 's/"//g' | head -1)
+              if [ "$current_image" = "latest" ]; then
+                echo "Chart $chart_name uses 'latest' tag - consider pinning to a specific version"
+              fi
+              
+              cd - > /dev/null
+            fi
+          done
+
+      - name: Check for changes
+        id: verify-changed-files
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+            git diff --stat
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create Pull Request
+        if: steps.verify-changed-files.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: update chart dependencies"
+          title: "chore: update chart dependencies"
+          body: |
+            Automated dependency update for Helm charts.
+            
+            This PR updates:
+            - Helm chart dependencies
+            - Any available package updates
+            
+            Please review the changes and ensure compatibility before merging.
+          branch: chore/update-dependencies
+          delete-branch: true
