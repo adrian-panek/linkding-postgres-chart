@@ -1,6 +1,6 @@
-# Linkding Postgres Char
+# Linkding Helm Charts with PostgreSQL
 
-A collection of Helm charts for deploying Linkding (a bookmark manager) with PostgreSQL backend on Kubernetes bare metal cluster.
+A collection of Helm charts for deploying [Linkding](https://github.com/sissbruecker/linkding) (a bookmark manager) with PostgreSQL backend on Kubernetes bare metal cluster.
 
 ## Overview
 

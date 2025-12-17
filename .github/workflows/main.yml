@@ -105,3 +105,17 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Run Trivy security scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'config'
+          hide-progres: false
+          format: 'sarif'
+          scan-ref: 'charts/'
+          output: 'trivy-result.sarif'
+          
+      - name: Upload Trivy scan result to Github security tab
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'trivy-result.sarif'
