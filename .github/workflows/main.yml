@@ -116,7 +116,7 @@ jobs:
           scan-type: 'config'
           hide-progres: false
           format: 'sarif'
-          scan-ref: 'charts/'
+          scan-ref: '.'
           output: 'trivy-result.sarif'
           
       - name: Upload Trivy scan result to Github security tab
